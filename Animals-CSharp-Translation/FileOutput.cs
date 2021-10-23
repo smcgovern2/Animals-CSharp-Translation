@@ -9,15 +9,15 @@ namespace Animals_CSharp_Translation
     class FileOutput
     {
         private String FileName { get; set; }
-        private FileStream Stream { get; set; }
-        private StreamWriter Writer { get; set; }
+        private FileStream Stream { get; set; } = null;
+        private StreamWriter Writer { get; set; } = null;
 
         public FileOutput(String fileName)
         {
             this.FileName = fileName;
             try
             {
-                Stream = File.OpenWrite(fileName);
+                Stream = File.Open(fileName, FileMode.Open, FileAccess.Write, FileShare.ReadWrite);
                 Writer = new StreamWriter(Stream) ;
                 
             }
@@ -31,7 +31,9 @@ namespace Animals_CSharp_Translation
         {
             try
             {
-                Writer.WriteLine(line + "\n");
+                
+                Writer.WriteLine(line);
+               
             }
             catch (Exception e)
             {
@@ -45,22 +47,28 @@ namespace Animals_CSharp_Translation
             {
                 try
                 {
+                    Writer.Close();
                     Writer.Dispose();
                 }
                 catch (IOException e)
                 {
                     Console.WriteLine(e.StackTrace);
                 }
+            }
+            if (Stream != null)
+            {
                 try
                 {
+                    Stream.Close();
                     Stream.Dispose();
                 }
                 catch (IOException e)
                 {
                     Console.WriteLine(e.StackTrace);
                 }
-
             }
+
+            
 
         }
     }

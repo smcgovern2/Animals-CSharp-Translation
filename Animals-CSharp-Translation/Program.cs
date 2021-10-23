@@ -1,22 +1,24 @@
 ﻿using System;
 using System.Collections;
+using System.IO;
 
 namespace Animals_CSharp_Translation
 {
     class Program
     {
-        private static FileOutput OutFile = new FileOutput("animals.txt");
-        private static FileInput InFile = new FileInput("animals.txt");
 
+        private readonly static FileOutput OutFile = new FileOutput("animals.txt");
+        private readonly static FileInput InFile = new FileInput("animals.txt");
         public static void Main(string[] args)
+
         {
             if (args is null)
             {
                 throw new ArgumentNullException(nameof(args));
             }
+            
 
-
-            ArrayList zoo = new ArrayList
+        ArrayList zoo = new ArrayList
             {
 
                 // Lines to Replace Begin Here
@@ -30,7 +32,8 @@ namespace Animals_CSharp_Translation
             {
                 PrintOut(thing);
             }
-           
+
+            
             InFile.FileRead();
             InFile.FileClose();
             OutFile.FileClose();
@@ -46,6 +49,7 @@ namespace Animals_CSharp_Translation
         public static void PrintOut(ITalkable p)
         {
             Console.WriteLine(p.Name + " says=" + p.Talk());
+            OutFile.FileWrite(p.Name + " | " + p.Talk());
         }
     }
     

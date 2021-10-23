@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Animals_CSharp_Translation
 {
@@ -9,19 +10,24 @@ namespace Animals_CSharp_Translation
     {
         private String FileName { get; set; }
 
-        private FileStream Stream { get; set; }
-        private StreamReader Reader {get; set;}
+        private StreamReader Reader { get; set; } = null;
+
+        private FileStream Stream { get; set; } = null;
 
         public FileInput(String fileName)
         {
             this.FileName = fileName;
             try
             {
-                /*Stream = File.OpenRead(fileName);
-                Reader = new StreamReader(Stream);*/
+                Stream = File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 
-                Reader = new StreamReader(FileName);
+                Reader = new StreamReader(Stream);
+
+
                 
+
+                /*Reader = new StreamReader(FileName);*/
+
             }
             catch (FileNotFoundException e)
             {
@@ -34,9 +40,12 @@ namespace Animals_CSharp_Translation
             String line;
             try
             {
-                while ((line = Reader.ReadLine()) != null) {
+                
+                while ((line = Reader.ReadLine()) != null)
+                {
                     Console.WriteLine(line);
                 }
+                
             }
             catch (Exception e)
             {
@@ -48,8 +57,10 @@ namespace Animals_CSharp_Translation
         {
             try
             {
+                
                 String line = Reader.ReadLine();
                 return line;
+                
             }
             catch (Exception e)
             {
@@ -60,18 +71,32 @@ namespace Animals_CSharp_Translation
 
         public void FileClose()
         {
-            if (Reader != null) {
+            if (Reader != null)
+            {
+
                 try
                 {
-                
-                Reader.Dispose();
-                Stream.Dispose();
+                    Reader.Close();
+                    Reader.Dispose();
                 }
                 catch (IOException e)
                 {
                     Console.WriteLine(e.StackTrace);
                 }
             }
+            if (Stream != null)
+            {
+                try
+                {
+                    Stream.Close();
+                    Stream.Dispose();
+                }
+                catch (IOException e)
+                {
+                    Console.WriteLine(e.StackTrace);
+                }
+            }
+        
 
         }
     }
